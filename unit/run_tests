@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# If $METHOD is not set, use opt
+if [ -z $METHOD ]; then
+  export METHOD=opt
+fi
+
+if [ -e ./unit/potassium-unit-$METHOD ]
+then
+  ./unit/potassium-unit-$METHOD
+elif [ -e ./potassium-unit-$METHOD ]
+then
+  ./potassium-unit-$METHOD
+else
+  echo "Executable missing!"
+  exit 1
+fi

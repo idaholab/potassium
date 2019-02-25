@@ -1,0 +1,33 @@
+Content:
+    - ${ROOT_DIR}/doc/content
+    - ${MOOSE_DIR}/framework/doc/content
+    - ${MOOSE_DIR}/modules/fluid_properties/doc/content
+
+Renderer:
+    type: MooseDocs.base.MaterializeRenderer
+    name: potassium
+    repo: https://hpcgitlab.inl.gov/idaholab/potassium
+    home: https://hpcsc.inl.gov/ssl/POTASSIUM/site/
+
+Extensions:
+    MooseDocs.extensions.navigation:
+        menu:
+            Developers:
+                Workflow: workflow.md
+                Build Status: https://moosebuild.inl.gov/repo/idaholab/potassium
+    MooseDocs.extensions.appsyntax:
+        executable: ${ROOT_DIR}
+        hide:
+            framework: !include ${MOOSE_DIR}/framework/doc/hidden.yml
+            fluid_properties: !include ${MOOSE_DIR}/modules/fluid_properties/doc/hidden.yml
+        includes:
+            - include
+            - ${MOOSE_DIR}/framework/include
+            - ${MOOSE_DIR}/modules/fluid_properties/include
+        remove:
+            framework: !include ${MOOSE_DIR}/framework/doc/remove.yml
+    MooseDocs.extensions.common:
+        shortcuts:
+            framework: !include ${MOOSE_DIR}/framework/doc/globals.yml
+    MooseDocs.extensions.acronym:
+        acronyms: !include ${MOOSE_DIR}/framework/doc/acronyms.yml
