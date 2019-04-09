@@ -2,7 +2,6 @@
 #define POTASSIUMLIQUIDFLUIDPROPERTIES_H
 
 #include "SinglePhaseFluidProperties.h"
-#include "LiquidFluidPropertiesInterface.h"
 #include "NaNInterface.h"
 
 class PotassiumLiquidFluidProperties;
@@ -25,7 +24,6 @@ InputParameters validParams<PotassiumLiquidFluidProperties>();
  * - conductivity:       Btu/(hr ft R)
  */
 class PotassiumLiquidFluidProperties : public SinglePhaseFluidProperties,
-                                       public LiquidFluidPropertiesInterface,
                                        public NaNInterface
 {
 public:
@@ -71,8 +69,6 @@ public:
   // virtual Real molarMass() const override;
   virtual Real criticalTemperature() const override;
   virtual Real criticalDensity() const override;
-
-  virtual Real sigma_from_p_T(Real p, Real T) const override;
 
 protected:
   /// Conversion factor from m to ft
