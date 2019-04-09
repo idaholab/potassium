@@ -3,6 +3,7 @@
 
 void DIFF_ps_t_K(double t, double & ps, double & dpsdt, double & d2psdt2);
 int DIFF_ts_p_K(double p, double & ts, double & dtsdp, double & d2tsdp2);
+void sigma_t_K(double t, double & sigma, double & dsigmadt);
 
 const Real Potassium7EqnFluidProperties::_P_critical = 15.95E+6;
 
@@ -99,4 +100,20 @@ Potassium7EqnFluidProperties::dT_sat_dp(Real pressure) const
   }
   else
     return getNaN();
+}
+
+Real
+Potassium7EqnFluidProperties::sigma_from_T(Real T) const
+{
+  double sigma, dsigmadt;
+  sigma_t_K(T, sigma, dsigmadt);
+  return sigma * 1e-3;
+}
+
+Real
+Potassium7EqnFluidProperties::dsigma_dT_from_T(Real T) const
+{
+  double sigma, dsigmadt;
+  sigma_t_K(T, sigma, dsigmadt);
+  return dsigmadt * 1e-3;
 }

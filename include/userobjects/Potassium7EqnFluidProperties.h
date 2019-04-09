@@ -22,6 +22,8 @@ public:
   virtual Real T_sat(Real pressure) const override;
   virtual Real p_sat(Real temperature) const override;
   virtual Real dT_sat_dp(Real pressure) const override;
+  virtual Real sigma_from_T(Real T) const override;
+  virtual Real dsigma_dT_from_T(Real T) const override;
 
   virtual bool supportsPhaseChange() const override { return true; }
 
