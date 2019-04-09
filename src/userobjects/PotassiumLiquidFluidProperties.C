@@ -651,11 +651,3 @@ PotassiumLiquidFluidProperties::criticalDensity() const
 {
   return 192.;
 }
-
-Real
-PotassiumLiquidFluidProperties::sigma_from_p_T(Real, Real T) const
-{
-  double sigma, dsigmadt;
-  sigma_t_K(T, sigma, dsigmadt);
-  return sigma * 1e-3;
-}

@@ -77,9 +77,6 @@ TEST_F(PotassiumLiquidFluidPropertiesTest, test)
   REL_TEST(h_from_p_T, 1459521.0455779997, REL_TOL_SAVED_VALUE);
   DERIV_TEST(_fp->h_from_p_T, p, T, REL_TOL_DERIVATIVE);
 
-  // sigma
-  REL_TEST(_fp->sigma_from_p_T(p, T), 0.037181600000000002, REL_TOL_SAVED_VALUE);
-
   // beta
   const Real beta = _fp->beta_from_p_T(p, T);
   REL_TEST(beta, 0.00050075752661458332, REL_TOL_SAVED_VALUE);

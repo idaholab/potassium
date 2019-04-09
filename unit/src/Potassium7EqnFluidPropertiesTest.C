@@ -21,4 +21,11 @@ TEST_F(Potassium7EqnFluidPropertiesTest, test)
 
   // Psat
   REL_TEST(_fp->p_sat(T), 391352.20564277115, REL_TOL_SAVED_VALUE);
+
+  {
+    // sigma
+    T = 1500.;
+    REL_TEST(_fp->sigma_from_T(T), 0.037181600000000002, REL_TOL_SAVED_VALUE);
+    DERIV_TEST_1D(_fp->sigma_from_T, _fp->dsigma_dT_from_T, T, REL_TOL_DERIVATIVE);
+  }
 }
