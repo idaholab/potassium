@@ -1,5 +1,4 @@
-#ifndef POTASSIUMAPP_H
-#define POTASSIUMAPP_H
+#pragma once
 
 #include "MooseApp.h"
 
@@ -20,5 +19,3 @@ public:
 
 protected:
 };
-
-#endif /* POTASSIUMAPP_H */

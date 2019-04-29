@@ -1,5 +1,4 @@
-#ifndef POTASSIUMVAPORFLUIDPROPERTIES_H
-#define POTASSIUMVAPORFLUIDPROPERTIES_H
+#pragma once
 
 #include "SinglePhaseFluidProperties.h"
 #include "NaNInterface.h"
@@ -113,5 +112,3 @@ protected:
   /// Conversion factor from Btu/(lb R) to J/(kg K)
   const Real _to_J_kgK;
 };
-
-#endif /* POTASSIUMVAPORFLUIDPROPERTIES_H */
