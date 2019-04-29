@@ -1,5 +1,4 @@
-#ifndef POTASSIUM7EQNFLUIDPROPERTIES_H
-#define POTASSIUM7EQNFLUIDPROPERTIES_H
+#pragma once
 
 #include "TwoPhaseFluidProperties.h"
 #include "NaNInterface.h"
@@ -41,5 +40,3 @@ protected:
   /// Conversion factor from R to K
   const Real _to_K;
 };
-
-#endif /* POTASSIUM7EQNFLUIDPROPERTIES_H */

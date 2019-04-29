@@ -1,5 +1,4 @@
-#ifndef POTASSIUM7EQNFLUIDPROPERTIESTEST_H
-#define POTASSIUM7EQNFLUIDPROPERTIESTEST_H
+#pragma once
 
 #include "MooseObjectUnitTest.h"
 #include "Potassium7EqnFluidProperties.h"
@@ -19,5 +18,3 @@ protected:
 
   const Potassium7EqnFluidProperties * _fp;
 };
-
-#endif /* POTASSIUM7EQNFLUIDPROPERTIESTEST_H */

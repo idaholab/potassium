@@ -1,5 +1,4 @@
-#ifndef POTASSIUMVAPORFLUIDPROPERTIESTEST_H
-#define POTASSIUMVAPORFLUIDPROPERTIESTEST_H
+#pragma once
 
 #include "MooseObjectUnitTest.h"
 #include "PotassiumVaporFluidProperties.h"
@@ -19,5 +18,3 @@ protected:
 
   const PotassiumVaporFluidProperties * _fp;
 };
-
-#endif
