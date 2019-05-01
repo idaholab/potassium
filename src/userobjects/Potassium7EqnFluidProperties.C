@@ -30,6 +30,7 @@ Potassium7EqnFluidProperties::Potassium7EqnFluidProperties(const InputParameters
   {
     std::string class_name = "PotassiumLiquidFluidProperties";
     InputParameters params = _app.getFactory().getValidParams(class_name);
+    params.set<MooseEnum>("emit_on_nan") = getParam<MooseEnum>("emit_on_nan");
     _fe_problem.addUserObject(class_name, _liquid_name, params);
   }
   _fp_liquid = &_fe_problem.getUserObject<SinglePhaseFluidProperties>(_liquid_name);
@@ -37,6 +38,7 @@ Potassium7EqnFluidProperties::Potassium7EqnFluidProperties(const InputParameters
   {
     std::string class_name = "PotassiumVaporFluidProperties";
     InputParameters params = _app.getFactory().getValidParams(class_name);
+    params.set<MooseEnum>("emit_on_nan") = getParam<MooseEnum>("emit_on_nan");
     _fe_problem.addUserObject(class_name, _vapor_name, params);
   }
   _fp_vapor = &_fe_problem.getUserObject<SinglePhaseFluidProperties>(_vapor_name);
