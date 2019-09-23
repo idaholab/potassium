@@ -11,6 +11,11 @@ InputParameters validParams<Potassium7EqnFluidProperties>();
 
 /**
  * Potassium interface for 7-eqn model
+ *
+ * Range of validity:
+ *   1.01325 Pa (1e-5 atm) <= p <= 101.325 MPa (1000 atm)
+ *   250 K <= T <= 2300 K
+ *
  */
 class Potassium7EqnFluidProperties : public TwoPhaseFluidProperties, public NaNInterface
 {
