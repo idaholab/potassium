@@ -1,7 +1,7 @@
-#include "Potassium7EqnFluidPropertiesTest.h"
+#include "PotassiumTwoPhaseFluidPropertiesTest.h"
 #include "SinglePhaseFluidPropertiesTestUtils.h"
 
-TEST_F(Potassium7EqnFluidPropertiesTest, test)
+TEST_F(PotassiumTwoPhaseFluidPropertiesTest, test)
 {
   const Real relative_perturbation = 1e-6;
 
