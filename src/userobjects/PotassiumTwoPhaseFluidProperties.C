@@ -1,25 +1,29 @@
-#include "Potassium7EqnFluidProperties.h"
+#include "PotassiumTwoPhaseFluidProperties.h"
 #include "SinglePhaseFluidProperties.h"
 
 void DIFF_ps_t_K(double t, double & ps, double & dpsdt, double & d2psdt2);
 int DIFF_ts_p_K(double p, double & ts, double & dtsdp, double & d2tsdp2);
 void sigma_t_K(double t, double & sigma, double & dsigmadt);
 
-const Real Potassium7EqnFluidProperties::_P_critical = 15.95E+6;
+const Real PotassiumTwoPhaseFluidProperties::_P_critical = 15.95E+6;
 
-registerMooseObject("PotassiumApp", Potassium7EqnFluidProperties);
+registerMooseObject("PotassiumApp", PotassiumTwoPhaseFluidProperties);
+registerMooseObjectAliased("PotassiumApp",
+                           PotassiumTwoPhaseFluidProperties,
+                           "Potassium7EqnFluidProperties");
 
 template <>
 InputParameters
-validParams<Potassium7EqnFluidProperties>()
+validParams<PotassiumTwoPhaseFluidProperties>()
 {
   InputParameters params = validParams<TwoPhaseFluidProperties>();
   params += validParams<NaNInterface>();
-  params.addClassDescription("Fluid properties of potassium for the 7-equation model.");
+  params.addClassDescription("Two-phase potassium fluid properties");
   return params;
 }
 
-Potassium7EqnFluidProperties::Potassium7EqnFluidProperties(const InputParameters & parameters)
+PotassiumTwoPhaseFluidProperties::PotassiumTwoPhaseFluidProperties(
+    const InputParameters & parameters)
   : TwoPhaseFluidProperties(parameters),
     NaNInterface(this),
     _to_atm(1. / 101325.),
@@ -47,13 +51,13 @@ Potassium7EqnFluidProperties::Potassium7EqnFluidProperties(const InputParameters
 }
 
 Real
-Potassium7EqnFluidProperties::p_critical() const
+PotassiumTwoPhaseFluidProperties::p_critical() const
 {
   return _P_critical;
 }
 
 Real
-Potassium7EqnFluidProperties::T_sat(Real pressure) const
+PotassiumTwoPhaseFluidProperties::T_sat(Real pressure) const
 {
   pressure *= _to_atm;
 
@@ -71,7 +75,7 @@ Potassium7EqnFluidProperties::T_sat(Real pressure) const
 }
 
 Real
-Potassium7EqnFluidProperties::p_sat(Real temperature) const
+PotassiumTwoPhaseFluidProperties::p_sat(Real temperature) const
 {
   temperature *= _to_R;
 
@@ -89,7 +93,7 @@ Potassium7EqnFluidProperties::p_sat(Real temperature) const
 }
 
 Real
-Potassium7EqnFluidProperties::dT_sat_dp(Real pressure) const
+PotassiumTwoPhaseFluidProperties::dT_sat_dp(Real pressure) const
 {
   pressure *= _to_atm;
 
@@ -107,7 +111,7 @@ Potassium7EqnFluidProperties::dT_sat_dp(Real pressure) const
 }
 
 Real
-Potassium7EqnFluidProperties::sigma_from_T(Real T) const
+PotassiumTwoPhaseFluidProperties::sigma_from_T(Real T) const
 {
   double sigma, dsigmadt;
   sigma_t_K(T, sigma, dsigmadt);
@@ -115,7 +119,7 @@ Potassium7EqnFluidProperties::sigma_from_T(Real T) const
 }
 
 Real
-Potassium7EqnFluidProperties::dsigma_dT_from_T(Real T) const
+PotassiumTwoPhaseFluidProperties::dsigma_dT_from_T(Real T) const
 {
   double sigma, dsigmadt;
   sigma_t_K(T, sigma, dsigmadt);
