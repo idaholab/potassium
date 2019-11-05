@@ -3,24 +3,24 @@
 #include "TwoPhaseFluidProperties.h"
 #include "NaNInterface.h"
 
-class Potassium7EqnFluidProperties;
+class PotassiumTwoPhaseFluidProperties;
 class SinglePhaseFluidProperties;
 
 template <>
-InputParameters validParams<Potassium7EqnFluidProperties>();
+InputParameters validParams<PotassiumTwoPhaseFluidProperties>();
 
 /**
- * Potassium interface for 7-eqn model
+ * Two-phase potassium fluid properties
  *
  * Range of validity:
  *   1.01325 Pa (1e-5 atm) <= p <= 101.325 MPa (1000 atm)
  *   250 K <= T <= 2300 K
  *
  */
-class Potassium7EqnFluidProperties : public TwoPhaseFluidProperties, public NaNInterface
+class PotassiumTwoPhaseFluidProperties : public TwoPhaseFluidProperties, public NaNInterface
 {
 public:
-  Potassium7EqnFluidProperties(const InputParameters & parameters);
+  PotassiumTwoPhaseFluidProperties(const InputParameters & parameters);
 
   virtual Real p_critical() const override;
   virtual Real T_sat(Real pressure) const override;
