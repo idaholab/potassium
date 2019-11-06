@@ -8,9 +8,6 @@ void sigma_t_K(double t, double & sigma, double & dsigmadt);
 const Real PotassiumTwoPhaseFluidProperties::_P_critical = 15.95E+6;
 
 registerMooseObject("PotassiumApp", PotassiumTwoPhaseFluidProperties);
-registerMooseObjectAliased("PotassiumApp",
-                           PotassiumTwoPhaseFluidProperties,
-                           "Potassium7EqnFluidProperties");
 
 template <>
 InputParameters
