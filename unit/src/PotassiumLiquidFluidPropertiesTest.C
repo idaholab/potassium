@@ -63,6 +63,7 @@ TEST_F(PotassiumLiquidFluidPropertiesTest, test)
   // k
   const Real k = _fp->k_from_v_e(v, e);
   REL_TEST(k, 19.197175558481387, REL_TOL_SAVED_VALUE);
+  DERIV_TEST(_fp->k_from_v_e, v, e, REL_TOL_DERIVATIVE);
 
   // s
   REL_TEST(s, 3095.3780162439684, REL_TOL_EXTERNAL_VALUE);

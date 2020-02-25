@@ -234,6 +234,34 @@ PotassiumVaporFluidProperties::k_from_v_e(Real v, Real e) const
   return lambda * _to_J / (_to_s * _to_m * _to_K);
 }
 
+void
+PotassiumVaporFluidProperties::k_from_v_e(
+    Real v, Real e, Real & k, Real & dk_dv, Real & dk_de) const
+{
+  v *= _to_ft3_lb;
+  e *= _to_Btu_lb;
+
+  double p, T;
+  FLASH_vu_G_K(v, e, T, p);
+
+  double dkdt, d2kdt2;
+  lambdav_t_K(T, k, dkdt, d2kdt2); // k in Btu/hr-ft-F
+
+  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+  double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
+  DIFF_vu_tp_G_K(
+      T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
+
+  dk_dv = dkdt * dudp / (dvdt * dudp - dvdp * dudt);
+  dk_de = dkdt * dvdp / (dudt * dvdp - dudp * dvdt);
+
+  const double k_conv = _to_J / (_to_s * _to_m * _to_K);
+
+  k *= k_conv;
+  dk_dv *= k_conv / _to_m3_kg;
+  dk_de *= k_conv / _to_J_kg;
+}
+
 Real
 PotassiumVaporFluidProperties::s_from_v_e(Real v, Real e) const
 {
