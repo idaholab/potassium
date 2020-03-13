@@ -59,6 +59,7 @@ TEST_F(PotassiumVaporFluidPropertiesTest, test)
   // mu
   const Real mu = _fp->mu_from_v_e(v, e);
   REL_TEST(mu, 0.000021913164388771186, REL_TOL_SAVED_VALUE);
+  DERIV_TEST(_fp->mu_from_v_e, v, e, REL_TOL_DERIVATIVE);
 
   // k
   const Real k = _fp->k_from_v_e(v, e);
