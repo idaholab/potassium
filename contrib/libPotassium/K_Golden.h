@@ -207,6 +207,7 @@ int FLASH_hs_G_K(double h, double s, double & t, double & p);
 // transport properties
 void sigma_t_K(double t, double & sigma, double & dsigmadt); // K, mN/m
 double etal_tv_K(double t, double v);
+void etal_tv_K(double t, double v, double & etal, double & detaldt, double & detaldv);
 void etav_t_K(double t, double & etav, double & detavdt, double & d2etavdt2);
 void lambdal_t_K(double t,
                   double & lambdal,

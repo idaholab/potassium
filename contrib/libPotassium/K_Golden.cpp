@@ -2195,6 +2195,36 @@ etal_tv_K(double t, double v)
 }
 //
 void
+etal_tv_K(double t, double v, double & etal, double & detaldt, double & detaldv)
+{ // R, lb/ft3, lbm/ft-hr
+    static const double tKg = 380.+273.15;
+    static const double third = 1./3.;
+    static const double lb_ft3_to_m3_kg=(0.3048*0.3048*0.3048) / 0.45359237;
+    static const double cP_to_lbm_ft_hr=1.e-3* (3600. * 0.3048) /0.45359237;
+
+    double tK = 5./9.*t;
+    double rho = 1.e-3/(v*lb_ft3_to_m3_kg); //g/cm3
+
+    double coef, exp_coef;
+    if(tK<tKg) {
+        coef=0.1131;
+        exp_coef=680.;
+    } else {
+        coef=0.0799;
+        exp_coef=978.;
+    }
+
+    const double rho_third=pow(rho,third);
+    const double exp_term=exp(exp_coef*rho/tK);
+    etal=coef*rho_third*exp_term; //cP=mPa*s
+    etal*=cP_to_lbm_ft_hr;
+
+    detaldt=-5./9.*coef*rho_third*exp_term*exp_coef*rho/pow(tK,2)*cP_to_lbm_ft_hr;
+    const double detadrho = coef*exp_term*(third*pow(rho,third-1.0)+rho_third*exp_coef/tK)*cP_to_lbm_ft_hr;
+    detaldv=-1.e-3*detadrho/(lb_ft3_to_m3_kg*pow(v,2));
+}
+//
+void
 etav_t_K(double t, double & etav, double & detavdt, double & d2etavdt2)
 { // R, lbm/ft-hr
   static const double a = 7.65637393e-03;
