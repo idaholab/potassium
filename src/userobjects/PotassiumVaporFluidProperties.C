@@ -3,12 +3,11 @@
 
 registerMooseObject("PotassiumApp", PotassiumVaporFluidProperties);
 
-template <>
 InputParameters
-validParams<PotassiumVaporFluidProperties>()
+PotassiumVaporFluidProperties::validParams()
 {
-  InputParameters params = validParams<SinglePhaseFluidProperties>();
-  params += validParams<NaNInterface>();
+  InputParameters params = SinglePhaseFluidProperties::validParams();
+  params += NaNInterface::validParams();
   params.addClassDescription("Fluid properties of potassium vapor.");
   return params;
 }

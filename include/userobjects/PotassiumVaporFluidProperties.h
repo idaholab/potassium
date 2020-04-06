@@ -3,11 +3,6 @@
 #include "SinglePhaseFluidProperties.h"
 #include "NaNInterface.h"
 
-class PotassiumVaporFluidProperties;
-
-template <>
-InputParameters validParams<PotassiumVaporFluidProperties>();
-
 /**
  * Fluid properties of potassium according to Golden et al.,
  * NaK Handbook, Pasternak, Lee & Bonilla with some
@@ -113,4 +108,7 @@ protected:
   const Real _to_Btu_lbR;
   /// Conversion factor from Btu/(lb R) to J/(kg K)
   const Real _to_J_kgK;
+
+public:
+  static InputParameters validParams();
 };
