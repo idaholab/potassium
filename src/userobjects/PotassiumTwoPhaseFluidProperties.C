@@ -9,12 +9,11 @@ const Real PotassiumTwoPhaseFluidProperties::_P_critical = 15.95E+6;
 
 registerMooseObject("PotassiumApp", PotassiumTwoPhaseFluidProperties);
 
-template <>
 InputParameters
-validParams<PotassiumTwoPhaseFluidProperties>()
+PotassiumTwoPhaseFluidProperties::validParams()
 {
-  InputParameters params = validParams<TwoPhaseFluidProperties>();
-  params += validParams<NaNInterface>();
+  InputParameters params = TwoPhaseFluidProperties::validParams();
+  params += NaNInterface::validParams();
   params.addClassDescription("Two-phase potassium fluid properties");
   return params;
 }

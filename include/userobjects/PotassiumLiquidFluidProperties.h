@@ -3,11 +3,6 @@
 #include "SinglePhaseFluidProperties.h"
 #include "NaNInterface.h"
 
-class PotassiumLiquidFluidProperties;
-
-template <>
-InputParameters validParams<PotassiumLiquidFluidProperties>();
-
 /**
  * Fluid properties of potassium according to Golden et al.,
  * NaK Handbook, Pasternak, Lee & Bonilla with some
@@ -22,8 +17,7 @@ InputParameters validParams<PotassiumLiquidFluidProperties>();
  * - dynamic viscosity:  lb/(hr ft)
  * - conductivity:       Btu/(hr ft R)
  */
-class PotassiumLiquidFluidProperties : public SinglePhaseFluidProperties,
-                                       public NaNInterface
+class PotassiumLiquidFluidProperties : public SinglePhaseFluidProperties, public NaNInterface
 {
 public:
   PotassiumLiquidFluidProperties(const InputParameters & parameters);
@@ -114,4 +108,7 @@ protected:
   const Real _to_Btu_lbR;
   /// Conversion factor from Btu/(lb R) to J/(kg K)
   const Real _to_J_kgK;
+
+public:
+  static InputParameters validParams();
 };
