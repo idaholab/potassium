@@ -6,11 +6,10 @@
 // Modules
 #include "FluidPropertiesApp.h"
 
-template <>
 InputParameters
-validParams<PotassiumApp>()
+PotassiumApp::validParams()
 {
-  InputParameters params = validParams<MooseApp>();
+  InputParameters params = MooseApp::validParams();
   params.set<bool>("use_legacy_output_syntax") = false;
   return params;
 }
