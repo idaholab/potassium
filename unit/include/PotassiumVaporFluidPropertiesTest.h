@@ -13,7 +13,7 @@ protected:
   {
     InputParameters uo_pars = _factory.getValidParams("PotassiumVaporFluidProperties");
     _fe_problem->addUserObject("PotassiumVaporFluidProperties", "fp", uo_pars);
-    _fp = &_fe_problem->getUserObjectTempl<PotassiumVaporFluidProperties>("fp");
+    _fp = &_fe_problem->getUserObject<PotassiumVaporFluidProperties>("fp");
   }
 
   const PotassiumVaporFluidProperties * _fp;
