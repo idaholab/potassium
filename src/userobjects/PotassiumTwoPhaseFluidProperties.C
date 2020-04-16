@@ -34,7 +34,7 @@ PotassiumTwoPhaseFluidProperties::PotassiumTwoPhaseFluidProperties(
     params.set<MooseEnum>("emit_on_nan") = getParam<MooseEnum>("emit_on_nan");
     _fe_problem.addUserObject(class_name, _liquid_name, params);
   }
-  _fp_liquid = &_fe_problem.getUserObjectTempl<SinglePhaseFluidProperties>(_liquid_name, _tid);
+  _fp_liquid = &_fe_problem.getUserObject<SinglePhaseFluidProperties>(_liquid_name, _tid);
 
   if (_tid == 0)
   {
@@ -43,7 +43,7 @@ PotassiumTwoPhaseFluidProperties::PotassiumTwoPhaseFluidProperties(
     params.set<MooseEnum>("emit_on_nan") = getParam<MooseEnum>("emit_on_nan");
     _fe_problem.addUserObject(class_name, _vapor_name, params);
   }
-  _fp_vapor = &_fe_problem.getUserObjectTempl<SinglePhaseFluidProperties>(_vapor_name, _tid);
+  _fp_vapor = &_fe_problem.getUserObject<SinglePhaseFluidProperties>(_vapor_name, _tid);
 }
 
 Real
