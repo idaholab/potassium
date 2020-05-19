@@ -3,6 +3,9 @@
 #include "SinglePhaseFluidProperties.h"
 #include "NaNInterface.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverloaded-virtual"
+
 /**
  * Fluid properties of potassium according to Golden et al.,
  * NaK Handbook, Pasternak, Lee & Bonilla with some
@@ -112,3 +115,5 @@ protected:
 public:
   static InputParameters validParams();
 };
+
+#pragma GCC diagnostic pop
