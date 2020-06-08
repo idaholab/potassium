@@ -8,6 +8,9 @@ TEST_F(PotassiumTwoPhaseFluidPropertiesTest, test)
   Real T = 1200.;  // K
   Real p = 101325; // Pa
 
+  // T_triple
+  REL_TEST(_fp->T_triple(), 336.35, REL_TOL_SAVED_VALUE);
+
   // Tsat + derivatives
   REL_TEST(_fp->T_sat(p), 1029.7303271118376, REL_TOL_SAVED_VALUE);
   {

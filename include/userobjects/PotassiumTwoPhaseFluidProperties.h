@@ -20,6 +20,7 @@ public:
   PotassiumTwoPhaseFluidProperties(const InputParameters & parameters);
 
   virtual Real p_critical() const override;
+  virtual Real T_triple() const override;
   virtual Real T_sat(Real pressure) const override;
   virtual Real p_sat(Real temperature) const override;
   virtual Real dT_sat_dp(Real pressure) const override;
@@ -31,6 +32,8 @@ public:
 protected:
   // Critical pressure
   static const Real _P_critical;
+  // Triple-point temperature
+  static const Real _T_triple;
 
 protected:
   /// Conversion factor from Pa to atm
