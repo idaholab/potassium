@@ -7,6 +7,11 @@ void sigma_t_K(double t, double & sigma, double & dsigmadt);
 
 const Real PotassiumTwoPhaseFluidProperties::_P_critical = 15.95E+6;
 
+// Value is taken from NIST Chemistry WebBook, SRD 69.
+// Original reference:
+// R. E. Honing and D. A. Kramer. Vapor pressure data for the solid andn liquid elements (1969)
+const Real PotassiumTwoPhaseFluidProperties::_T_triple = 336.35;
+
 registerMooseObject("PotassiumApp", PotassiumTwoPhaseFluidProperties);
 
 InputParameters
@@ -50,6 +55,12 @@ Real
 PotassiumTwoPhaseFluidProperties::p_critical() const
 {
   return _P_critical;
+}
+
+Real
+PotassiumTwoPhaseFluidProperties::T_triple() const
+{
+  return _T_triple;
 }
 
 Real
