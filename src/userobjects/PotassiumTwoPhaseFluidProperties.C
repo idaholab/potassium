@@ -9,8 +9,16 @@ const Real PotassiumTwoPhaseFluidProperties::_P_critical = 15.95E+6;
 
 // Value is taken from NIST Chemistry WebBook, SRD 69.
 // Original reference:
-// R. E. Honing and D. A. Kramer. Vapor pressure data for the solid andn liquid elements (1969)
+// R. E. Honing and D. A. Kramer. Vapor pressure data for the solid and liquid elements (1969)
 const Real PotassiumTwoPhaseFluidProperties::_T_triple = 336.35;
+
+// Value is taken from the following reference:
+//
+// O. J. Foust. Sodium-NaK Engineering Handbook, Volume 1: Sodium Chemistry and Physical Properties
+// (1972). Division of Reactor Development and Technology, United States Atomic Energy Commission.
+//
+// Value given was 14.2 cal/g, which was converted to J/kg.
+const Real PotassiumTwoPhaseFluidProperties::_L_fusion = 0.0594128;
 
 registerMooseObject("PotassiumApp", PotassiumTwoPhaseFluidProperties);
 
@@ -61,6 +69,12 @@ Real
 PotassiumTwoPhaseFluidProperties::T_triple() const
 {
   return _T_triple;
+}
+
+Real
+PotassiumTwoPhaseFluidProperties::L_fusion() const
+{
+  return _L_fusion;
 }
 
 Real
