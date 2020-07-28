@@ -88,8 +88,11 @@ PotassiumTwoPhaseFluidProperties::T_sat(Real pressure) const
   if (p0 <= pressure && pressure <= pc)
   {
     double ts, dtsdp, d2tsdp2;
-    DIFF_ts_p_K(pressure, ts, dtsdp, d2tsdp2);
-    return ts * _to_K;
+    int ierr = DIFF_ts_p_K(pressure, ts, dtsdp, d2tsdp2);
+    if (ierr != 0)
+      return getNaN();
+    else
+      return ts * _to_K;
   }
   else
     return getNaN();
@@ -124,8 +127,11 @@ PotassiumTwoPhaseFluidProperties::dT_sat_dp(Real pressure) const
   if (p0 <= pressure && pressure <= pc)
   {
     double ts, dtsdp, d2tsdp2;
-    DIFF_ts_p_K(pressure, ts, dtsdp, d2tsdp2);
-    return dtsdp * _to_K / _to_Pa;
+    int ierr = DIFF_ts_p_K(pressure, ts, dtsdp, d2tsdp2);
+    if (ierr != 0)
+      return getNaN();
+    else
+      return dtsdp * _to_K / _to_Pa;
   }
   else
     return getNaN();

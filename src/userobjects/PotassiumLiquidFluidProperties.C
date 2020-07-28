@@ -46,9 +46,11 @@ PotassiumLiquidFluidProperties::p_from_v_e(Real v, Real e) const
   e *= _to_Btu_lb;
 
   double p, T;
-  FLASH_vu_L_K(v, e, T, p);
-
-  return p * _to_Pa;
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+    return p * _to_Pa;
 }
 
 void
@@ -59,13 +61,22 @@ PotassiumLiquidFluidProperties::p_from_v_e(
   e *= _to_Btu_lb;
 
   double T;
-  double dp_dv_u, dp_du_v, dt_dv_u, dt_du_v;
-  FLASH_vu_L_K(v, e, T, p);
-  DERIV_vu_L_K(T, p, dp_dv_u, dp_du_v, dt_dv_u, dt_du_v);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+  {
+    p = getNaN();
+    dp_dv = getNaN();
+    dp_de = getNaN();
+  }
+  else
+  {
+    double dp_dv_u, dp_du_v, dt_dv_u, dt_du_v;
+    DERIV_vu_L_K(T, p, dp_dv_u, dp_du_v, dt_dv_u, dt_du_v);
 
-  p *= _to_Pa;
-  dp_dv = dp_dv_u * _to_Pa / _to_m3_kg;
-  dp_de = dp_du_v * _to_Pa / _to_J_kg;
+    p *= _to_Pa;
+    dp_dv = dp_dv_u * _to_Pa / _to_m3_kg;
+    dp_de = dp_du_v * _to_Pa / _to_J_kg;
+  }
 }
 
 Real
@@ -75,9 +86,11 @@ PotassiumLiquidFluidProperties::T_from_v_e(Real v, Real e) const
   e *= _to_Btu_lb;
 
   double p, T;
-  FLASH_vu_L_K(v, e, T, p);
-
-  return T * _to_K;
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+    return T * _to_K;
 }
 
 void
@@ -88,13 +101,22 @@ PotassiumLiquidFluidProperties::T_from_v_e(
   e *= _to_Btu_lb;
 
   double p;
-  double dp_dv_u, dp_du_v, dt_dv_u, dt_du_v;
-  FLASH_vu_L_K(v, e, T, p);
-  DERIV_vu_L_K(T, p, dp_dv_u, dp_du_v, dt_dv_u, dt_du_v);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+  {
+    T = getNaN();
+    dT_dv = getNaN();
+    dT_de = getNaN();
+  }
+  else
+  {
+    double dp_dv_u, dp_du_v, dt_dv_u, dt_du_v;
+    DERIV_vu_L_K(T, p, dp_dv_u, dp_du_v, dt_dv_u, dt_du_v);
 
-  T *= _to_K;
-  dT_dv = dt_dv_u * _to_K / _to_m3_kg;
-  dT_de = dt_du_v * _to_K / _to_J_kg;
+    T *= _to_K;
+    dT_dv = dt_dv_u * _to_K / _to_m3_kg;
+    dT_de = dt_du_v * _to_K / _to_J_kg;
+  }
 }
 
 Real
@@ -104,11 +126,16 @@ PotassiumLiquidFluidProperties::c_from_v_e(Real v, Real e) const
   e *= _to_Btu_lb;
 
   double p, T;
-  double w, dwdt, dwdp;
-  FLASH_vu_L_K(v, e, T, p);
-  DIFF_w_tp_L_K(T, p, w, dwdt, dwdp);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double w, dwdt, dwdp;
+    DIFF_w_tp_L_K(T, p, w, dwdt, dwdp);
 
-  return w * _to_m;
+    return w * _to_m;
+  }
 }
 
 void
@@ -119,17 +146,26 @@ PotassiumLiquidFluidProperties::c_from_v_e(
   e *= _to_Btu_lb;
 
   double p, T;
-  double w, dwdt, dwdp;
-  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
-  FLASH_vu_L_K(v, e, T, p);
-  DIFF_vu_tp_L_K(
-      T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
-  DIFF_w_tp_L_K(T, p, w, dwdt, dwdp);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+  {
+    c = getNaN();
+    dc_dv = getNaN();
+    dc_de = getNaN();
+  }
+  else
+  {
+    double w, dwdt, dwdp;
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
+    DIFF_vu_tp_L_K(
+        T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
+    DIFF_w_tp_L_K(T, p, w, dwdt, dwdp);
 
-  c = w * _to_m;
-  dc_dv = (dwdt * dudp - dwdp * dudt) / (dvdt * dudp - dvdp * dudt) * _to_m / _to_m3_kg;
-  dc_de = (dwdt * dvdp - dwdp * dvdt) / (dudt * dvdp - dudp * dvdt) * _to_m / _to_J_kg;
+    c = w * _to_m;
+    dc_dv = (dwdt * dudp - dwdp * dudt) / (dvdt * dudp - dvdp * dudt) * _to_m / _to_m3_kg;
+    dc_de = (dwdt * dvdp - dwdp * dvdt) / (dudt * dvdp - dudp * dvdt) * _to_m / _to_J_kg;
+  }
 }
 
 Real
@@ -139,12 +175,16 @@ PotassiumLiquidFluidProperties::cp_from_v_e(Real v, Real e) const
   e *= _to_Btu_lb;
 
   double p, T;
-  double cp, dcpdt, dcpdp;
-  FLASH_vu_L_K(v, e, T, p);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double cp, dcpdt, dcpdp;
+    DIFF_cp_tp_L_K(T, p, cp, dcpdt, dcpdp);
 
-  DIFF_cp_tp_L_K(T, p, cp, dcpdt, dcpdp);
-
-  return cp * _to_J_kgK;
+    return cp * _to_J_kgK;
+  }
 }
 
 void
@@ -155,21 +195,29 @@ PotassiumLiquidFluidProperties::cp_from_v_e(
   e *= _to_Btu_lb;
 
   double p, T;
-  double dcpdt, dcpdp;
-  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
-  FLASH_vu_L_K(v, e, T, p);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+  {
+    cp = getNaN();
+    dcp_dv = getNaN();
+    dcp_de = getNaN();
+  }
+  else
+  {
+    double dcpdt, dcpdp;
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
+    DIFF_cp_tp_L_K(T, p, cp, dcpdt, dcpdp);
+    DIFF_vu_tp_L_K(
+        T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
 
-  DIFF_cp_tp_L_K(T, p, cp, dcpdt, dcpdp);
-  DIFF_vu_tp_L_K(
-      T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
+    dcp_dv = (dcpdt * dudp - dcpdp * dudt) / (dvdt * dudp - dvdp * dudt);
+    dcp_de = (dcpdt * dvdp - dcpdp * dvdt) / (dudt * dvdp - dudp * dvdt);
 
-  dcp_dv = (dcpdt * dudp - dcpdp * dudt) / (dvdt * dudp - dvdp * dudt);
-  dcp_de = (dcpdt * dvdp - dcpdp * dvdt) / (dudt * dvdp - dudp * dvdt);
-
-  cp *= _to_J_kgK;
-  dcp_dv *= _to_J_kgK / _to_m3_kg;
-  dcp_de *= _to_J_kgK / _to_J_kg;
+    cp *= _to_J_kgK;
+    dcp_dv *= _to_J_kgK / _to_m3_kg;
+    dcp_de *= _to_J_kgK / _to_J_kg;
+  }
 }
 
 Real
@@ -179,12 +227,16 @@ PotassiumLiquidFluidProperties::cv_from_v_e(Real v, Real e) const
   e *= _to_Btu_lb;
 
   double p, T;
-  double cv, dcvdt, dcvdp;
-  FLASH_vu_L_K(v, e, T, p);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double cv, dcvdt, dcvdp;
+    DIFF_cv_tp_L_K(T, p, cv, dcvdt, dcvdp);
 
-  DIFF_cv_tp_L_K(T, p, cv, dcvdt, dcvdp);
-
-  return cv * _to_J_kgK;
+    return cv * _to_J_kgK;
+  }
 }
 
 Real
@@ -194,12 +246,16 @@ PotassiumLiquidFluidProperties::mu_from_v_e(Real v, Real e) const
   e *= _to_Btu_lb;
 
   double p, T;
-  double eta;
-  FLASH_vu_L_K(v, e, T, p);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double eta;
+    eta = etal_tv_K(T, v); // eta in lbm/ft-hr
 
-  eta = etal_tv_K(T, v); // eta in lbm/ft-hr
-
-  return eta * _to_kg / (_to_s * _to_m);
+    return eta * _to_kg / (_to_s * _to_m);
+  }
 }
 
 void
@@ -261,12 +317,16 @@ PotassiumLiquidFluidProperties::k_from_v_e(Real v, Real e) const
   e *= _to_Btu_lb;
 
   double p, T;
-  double lambda, dlambdadt, d2lambdadt2;
-  FLASH_vu_L_K(v, e, T, p);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double lambda, dlambdadt, d2lambdadt2;
+    lambdal_t_K(T, lambda, dlambdadt, d2lambdadt2); // lambda in Btu/hr-ft-F
 
-  lambdal_t_K(T, lambda, dlambdadt, d2lambdadt2); // lambda in Btu/hr-ft-F
-
-  return lambda * _to_J / (_to_s * _to_m * _to_K);
+    return lambda * _to_J / (_to_s * _to_m * _to_K);
+  }
 }
 
 void
@@ -277,24 +337,32 @@ PotassiumLiquidFluidProperties::k_from_v_e(
   e *= _to_Btu_lb;
 
   double p, T;
-  FLASH_vu_L_K(v, e, T, p);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+  {
+    k = getNaN();
+    dk_dv = getNaN();
+    dk_de = getNaN();
+  }
+  else
+  {
+    double dkdt, d2kdt2;
+    lambdal_t_K(T, k, dkdt, d2kdt2); // k in Btu/hr-ft-F
 
-  double dkdt, d2kdt2;
-  lambdal_t_K(T, k, dkdt, d2kdt2); // k in Btu/hr-ft-F
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
+    DIFF_vu_tp_L_K(
+        T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
 
-  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
-  DIFF_vu_tp_L_K(
-      T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
+    dk_dv = dkdt * dudp / (dvdt * dudp - dvdp * dudt);
+    dk_de = dkdt * dvdp / (dudt * dvdp - dudp * dvdt);
 
-  dk_dv = dkdt * dudp / (dvdt * dudp - dvdp * dudt);
-  dk_de = dkdt * dvdp / (dudt * dvdp - dudp * dvdt);
+    const double k_conv = _to_J / (_to_s * _to_m * _to_K);
 
-  const double k_conv = _to_J / (_to_s * _to_m * _to_K);
-
-  k *= k_conv;
-  dk_dv *= k_conv / _to_m3_kg;
-  dk_de *= k_conv / _to_J_kg;
+    k *= k_conv;
+    dk_dv *= k_conv / _to_m3_kg;
+    dk_de *= k_conv / _to_J_kg;
+  }
 }
 
 Real
@@ -304,12 +372,16 @@ PotassiumLiquidFluidProperties::s_from_v_e(Real v, Real e) const
   e *= _to_Btu_lb;
 
   double p, T;
-  double s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
-  FLASH_vu_L_K(v, e, T, p);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
+    DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
 
-  DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
-
-  return s * _to_J_kgK;
+    return s * _to_J_kgK;
+  }
 }
 
 void
@@ -320,21 +392,29 @@ PotassiumLiquidFluidProperties::s_from_v_e(
   e *= _to_Btu_lb;
 
   double p, T;
-  double dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
-  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
-  FLASH_vu_L_K(v, e, T, p);
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+  {
+    s = getNaN();
+    ds_dv = getNaN();
+    ds_de = getNaN();
+  }
+  else
+  {
+    double dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
+    DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
+    DIFF_vu_tp_L_K(
+        T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
 
-  DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
-  DIFF_vu_tp_L_K(
-      T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
+    ds_dv = (dsdt * dudp - dsdp * dudt) / (dvdt * dudp - dvdp * dudt);
+    ds_de = (dsdt * dvdp - dsdp * dvdt) / (dudt * dvdp - dudp * dvdt);
 
-  ds_dv = (dsdt * dudp - dsdp * dudt) / (dvdt * dudp - dvdp * dudt);
-  ds_de = (dsdt * dvdp - dsdp * dvdt) / (dudt * dvdp - dudp * dvdt);
-
-  s *= _to_J_kgK;
-  ds_dv *= _to_J_kgK / _to_m3_kg;
-  ds_de *= _to_J_kgK / _to_J_kg;
+    s *= _to_J_kgK;
+    ds_dv *= _to_J_kgK / _to_m3_kg;
+    ds_de *= _to_J_kgK / _to_J_kg;
+  }
 }
 
 Real
@@ -344,12 +424,16 @@ PotassiumLiquidFluidProperties::s_from_h_p(Real h, Real p) const
   h *= _to_Btu_lb;
 
   double T;
-  double s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
+  int ierr = FLASH_ph_L_K(p, h, T);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
+    DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
 
-  FLASH_ph_L_K(p, h, T);
-  DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
-
-  return s * _to_J_kgK;
+    return s * _to_J_kgK;
+  }
 }
 
 void
@@ -360,16 +444,24 @@ PotassiumLiquidFluidProperties::s_from_h_p(
   h *= _to_Btu_lb;
 
   double T;
-  double dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
-  double h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
+  int ierr = FLASH_ph_L_K(p, h, T);
+  if (ierr != 0)
+  {
+    s = getNaN();
+    ds_dp = getNaN();
+    ds_dh = getNaN();
+  }
+  else
+  {
+    double dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
+    double h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
+    DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
+    DIFF_h_tp_L_K(T, p, h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
 
-  FLASH_ph_L_K(p, h, T);
-  DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
-  DIFF_h_tp_L_K(T, p, h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
-
-  s *= _to_J_kgK;
-  ds_dp = (dsdp - dsdt * dhdp / dhdt) * _to_J_kgK / _to_Pa;
-  ds_dh = dsdt / dhdt * _to_J_kgK / _to_J_kg;
+    s *= _to_J_kgK;
+    ds_dp = (dsdp - dsdt * dhdp / dhdt) * _to_J_kgK / _to_Pa;
+    ds_dh = dsdt / dhdt * _to_J_kgK / _to_J_kg;
+  }
 }
 
 Real
@@ -379,12 +471,16 @@ PotassiumLiquidFluidProperties::rho_from_p_s(Real p, Real s) const
   s *= _to_Btu_lbR;
 
   double T;
-  double v, dvdt, d2vdt2, dvdp, d2vdp2, d2vvdtdp;
+  int ierr = FLASH_ps_L_K(p, s, T);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double v, dvdt, d2vdt2, dvdp, d2vdp2, d2vvdtdp;
+    DIFF_v_tp_L_K(T, p, v, dvdt, d2vdt2, dvdp, d2vdp2, d2vvdtdp);
 
-  FLASH_ps_L_K(p, s, T);
-  DIFF_v_tp_L_K(T, p, v, dvdt, d2vdt2, dvdp, d2vdp2, d2vvdtdp);
-
-  return 1. / (v * _to_m3_kg);
+    return 1. / (v * _to_m3_kg);
+  }
 }
 
 void
@@ -395,25 +491,33 @@ PotassiumLiquidFluidProperties::rho_from_p_s(
   s *= _to_Btu_lbR;
 
   double T;
-  double v, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double s_, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
-  double dv_dp_s, dv_ds_p;
+  int ierr = FLASH_ps_L_K(p, s, T);
+  if (ierr != 0)
+  {
+    rho = getNaN();
+    drho_dp = getNaN();
+    drho_ds = getNaN();
+  }
+  else
+  {
+    double v, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double s_, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
+    double dv_dp_s, dv_ds_p;
+    DIFF_v_tp_L_K(T, p, v, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
+    DIFF_s_tp_L_K(T, p, s_, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
 
-  FLASH_ps_L_K(p, s, T);
-  DIFF_v_tp_L_K(T, p, v, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
-  DIFF_s_tp_L_K(T, p, s_, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
+    dv_dp_s = dvdp - dvdt * dsdp / dsdt;
+    dv_ds_p = dvdt / dsdt;
 
-  dv_dp_s = dvdp - dvdt * dsdp / dsdt;
-  dv_ds_p = dvdt / dsdt;
+    v *= _to_m3_kg;
+    dv_dp_s *= (_to_m3_kg / _to_Pa);
+    dv_ds_p *= (_to_m3_kg / _to_J_kgK);
 
-  v *= _to_m3_kg;
-  dv_dp_s *= (_to_m3_kg / _to_Pa);
-  dv_ds_p *= (_to_m3_kg / _to_J_kgK);
-
-  rho = 1. / v;
-  double drho_dv = -rho * rho;
-  drho_dp = drho_dv * dv_dp_s;
-  drho_ds = drho_dv * dv_ds_p;
+    rho = 1. / v;
+    double drho_dv = -rho * rho;
+    drho_dp = drho_dv * dv_dp_s;
+    drho_ds = drho_dv * dv_ds_p;
+  }
 }
 
 Real
@@ -425,17 +529,21 @@ PotassiumLiquidFluidProperties::e_from_v_h(Real v, Real h) const
   static const double atmft3_toBtu = (101325. * 0.3048 * 0.3048 * 0.3048) / 1055.05585262;
 
   double p, T;
-  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
-  double u;
-  FLASH_vh_L_K(v, h, T, p);
+  int ierr = FLASH_vh_L_K(v, h, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
+    double u;
+    DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
+    DIFF_h_tp_L_K(T, p, h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
 
-  DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
-  DIFF_h_tp_L_K(T, p, h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
+    u = h - p * v * atmft3_toBtu;
 
-  u = h - p * v * atmft3_toBtu;
-
-  return u * _to_J_kg;
+    return u * _to_J_kg;
+  }
 }
 
 void
@@ -448,21 +556,29 @@ PotassiumLiquidFluidProperties::e_from_v_h(
   static const double atmft3_toBtu = (101325. * 0.3048 * 0.3048 * 0.3048) / 1055.05585262;
 
   double p, T;
-  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
-  double u, dudt, dudp;
-  FLASH_vh_L_K(v, h, T, p);
+  int ierr = FLASH_vh_L_K(v, h, T, p);
+  if (ierr != 0)
+  {
+    e = getNaN();
+    de_dv = getNaN();
+    de_dh = getNaN();
+  }
+  else
+  {
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
+    double u, dudt, dudp;
+    DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
+    DIFF_h_tp_L_K(T, p, h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
 
-  DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
-  DIFF_h_tp_L_K(T, p, h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
+    u = h - p * v * atmft3_toBtu;
+    dudt = dhdt - p * dvdt * atmft3_toBtu;
+    dudp = dhdp - (v + p * dvdp) * atmft3_toBtu;
 
-  u = h - p * v * atmft3_toBtu;
-  dudt = dhdt - p * dvdt * atmft3_toBtu;
-  dudp = dhdp - (v + p * dvdp) * atmft3_toBtu;
-
-  e = u * _to_J_kg;
-  de_dv = (dudt * dhdp - dudp * dhdt) / (dvdt * dhdp - dvdp * dhdt) * _to_J_kg / _to_m3_kg;
-  de_dh = (dudt * dvdp - dudp * dvdt) / (dhdt * dvdp - dhdp * dvdt);
+    e = u * _to_J_kg;
+    de_dv = (dudt * dhdp - dudp * dhdt) / (dvdt * dhdp - dvdp * dhdt) * _to_J_kg / _to_m3_kg;
+    de_dh = (dudt * dvdp - dudp * dvdt) / (dhdt * dvdp - dhdp * dvdt);
+  }
 }
 
 Real
@@ -509,16 +625,21 @@ PotassiumLiquidFluidProperties::e_from_p_rho(Real p, Real rho) const
   static const double atmft3_toBtu = (101325. * 0.3048 * 0.3048 * 0.3048) / 1055.05585262;
 
   double T;
-  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
-  double u;
-  FLASH_prho_L_K(p, rho, T);
-  DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
-  DIFF_h_tp_L_K(T, p, h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
+  int ierr = FLASH_prho_L_K(p, rho, T);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
+    double u;
+    DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
+    DIFF_h_tp_L_K(T, p, h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
 
-  u = h - p * v * atmft3_toBtu;
+    u = h - p * v * atmft3_toBtu;
 
-  return u * _to_J_kg;
+    return u * _to_J_kg;
+  }
 }
 
 void
@@ -532,25 +653,34 @@ PotassiumLiquidFluidProperties::e_from_p_rho(
   static const double atmft3_toBtu = (101325. * 0.3048 * 0.3048 * 0.3048) / 1055.05585262;
 
   double T;
-  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
-  double u, dudt, dudp;
-  double de_dv;
-  FLASH_prho_L_K(p, rho, T);
-  DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
-  DIFF_h_tp_L_K(T, p, h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
+  int ierr = FLASH_prho_L_K(p, rho, T);
+  if (ierr != 0)
+  {
+    e = getNaN();
+    de_dp = getNaN();
+    de_drho = getNaN();
+  }
+  else
+  {
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
+    double u, dudt, dudp;
+    double de_dv;
+    DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
+    DIFF_h_tp_L_K(T, p, h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
 
-  u = h - p * v * atmft3_toBtu;
-  dudt = dhdt - p * dvdt * atmft3_toBtu;
-  dudp = dhdp - (v + p * dvdp) * atmft3_toBtu;
+    u = h - p * v * atmft3_toBtu;
+    dudt = dhdt - p * dvdt * atmft3_toBtu;
+    dudp = dhdp - (v + p * dvdp) * atmft3_toBtu;
 
-  de_dp = dudp - dudt * dvdp / dvdt;
-  de_dv = dudt / dvdt;
-  de_drho = -de_dv * v * v;
+    de_dp = dudp - dudt * dvdp / dvdt;
+    de_dv = dudt / dvdt;
+    de_drho = -de_dv * v * v;
 
-  e = u * _to_J_kg;
-  de_dp *= _to_J_kg / _to_Pa;
-  de_drho *= _to_J_kg * _to_m3_kg;
+    e = u * _to_J_kg;
+    de_dp *= _to_J_kg / _to_Pa;
+    de_drho *= _to_J_kg * _to_m3_kg;
+  }
 }
 
 Real
@@ -614,9 +744,11 @@ PotassiumLiquidFluidProperties::p_from_h_s(Real h, Real s) const
   s *= _to_Btu_lbR;
 
   double T, p;
-  FLASH_hs_L_K(h, s, T, p);
-
-  return p * _to_Pa;
+  int ierr = FLASH_hs_L_K(h, s, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+    return p * _to_Pa;
 }
 
 void
@@ -627,18 +759,27 @@ PotassiumLiquidFluidProperties::p_from_h_s(
   s *= _to_Btu_lbR;
 
   double T;
-  double h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
-  double s_, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
-  FLASH_hs_L_K(h, s, T, p);
-  DIFF_h_tp_L_K(T, p, h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
-  DIFF_s_tp_L_K(T, p, s_, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
+  int ierr = FLASH_hs_L_K(h, s, T, p);
+  if (ierr != 0)
+  {
+    p = getNaN();
+    dp_dh = getNaN();
+    dp_ds = getNaN();
+  }
+  else
+  {
+    double h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
+    double s_, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
+    DIFF_h_tp_L_K(T, p, h_, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
+    DIFF_s_tp_L_K(T, p, s_, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
 
-  dp_dh = 1. / (dhdp - dhdt * dsdp / dsdt);
-  dp_ds = 1. / (dsdp - dsdt * dhdp / dhdt);
+    dp_dh = 1. / (dhdp - dhdt * dsdp / dsdt);
+    dp_ds = 1. / (dsdp - dsdt * dhdp / dhdt);
 
-  p *= _to_Pa;
-  dp_dh *= _to_Pa / _to_J_kg;
-  dp_ds *= _to_Pa / _to_J_kgK;
+    p *= _to_Pa;
+    dp_dh *= _to_Pa / _to_J_kg;
+    dp_ds *= _to_Pa / _to_J_kgK;
+  }
 }
 
 Real
@@ -650,19 +791,23 @@ PotassiumLiquidFluidProperties::g_from_v_e(Real v, Real e) const
   static const double atmft3_toBtu = (101325. * 0.3048 * 0.3048 * 0.3048) / 1055.05585262;
 
   double T, p, g;
-  double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
-  double h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
-  double s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+    return getNaN();
+  else
+  {
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp;
+    double s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp;
+    DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
+    DIFF_h_tp_L_K(T, p, h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
+    DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
 
-  FLASH_vu_L_K(v, e, T, p);
-  DIFF_v_tp_L_K(T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp);
-  DIFF_h_tp_L_K(T, p, h, dhdt, d2hdt2, dhdp, d2hdp2, d2hdtdp);
-  DIFF_s_tp_L_K(T, p, s, dsdt, d2sdt2, dsdp, d2sdp2, d2sdtdp);
+    h = e + p * v * atmft3_toBtu;
+    g = h - T * s;
 
-  h = e + p * v * atmft3_toBtu;
-  g = h - T * s;
-
-  return g * _to_J_kg;
+    return g * _to_J_kg;
+  }
 }
 
 Real
