@@ -18,7 +18,7 @@ const Real PotassiumTwoPhaseFluidProperties::_T_triple = 336.35;
 // (1972). Division of Reactor Development and Technology, United States Atomic Energy Commission.
 //
 // Value given was 14.2 cal/g, which was converted to J/kg.
-const Real PotassiumTwoPhaseFluidProperties::_L_fusion = 0.0594128;
+const Real PotassiumTwoPhaseFluidProperties::_L_fusion = 59412.8;
 
 registerMooseObject("PotassiumApp", PotassiumTwoPhaseFluidProperties);
 
