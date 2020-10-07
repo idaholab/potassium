@@ -12,7 +12,7 @@ TEST_F(PotassiumTwoPhaseFluidPropertiesTest, test)
   REL_TEST(_fp->T_triple(), 336.35, REL_TOL_SAVED_VALUE);
 
   // L_fusion
-  REL_TEST(_fp->L_fusion(), 0.0594128, REL_TOL_SAVED_VALUE);
+  REL_TEST(_fp->L_fusion(), 59412.8, REL_TOL_SAVED_VALUE);
 
   // Tsat + derivatives
   REL_TEST(_fp->T_sat(p), 1029.7303271118376, REL_TOL_SAVED_VALUE);
