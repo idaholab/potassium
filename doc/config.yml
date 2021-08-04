@@ -13,7 +13,6 @@ Extensions:
     MooseDocs.extensions.navigation:
         name: potassium
         repo: https://hpcgitlab.inl.gov/idaholab/potassium
-        home: https://hpcsc.inl.gov/ssl/POTASSIUM/site/
         menu:
             Developers:
                 Workflow: workflow.md
