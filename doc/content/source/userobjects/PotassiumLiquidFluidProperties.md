@@ -1,9 +1,9 @@
-# PotassiumVaporFluidProperties
+# PotassiumLiquidFluidProperties
 
-!syntax description /Modules/FluidProperties/PotassiumVaporFluidProperties
+!syntax description /Modules/FluidProperties/PotassiumLiquidFluidProperties
 
-!syntax parameters /Modules/FluidProperties/PotassiumVaporFluidProperties
+!syntax parameters /Modules/FluidProperties/PotassiumLiquidFluidProperties
 
-!syntax inputs /Modules/FluidProperties/PotassiumVaporFluidProperties
+!syntax inputs /Modules/FluidProperties/PotassiumLiquidFluidProperties
 
-!syntax children /Modules/FluidProperties/PotassiumVaporFluidProperties
+!syntax children /Modules/FluidProperties/PotassiumLiquidFluidProperties
