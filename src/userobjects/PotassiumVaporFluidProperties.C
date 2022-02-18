@@ -839,14 +839,16 @@ PotassiumVaporFluidProperties::beta_from_p_T(
   dbeta_dp = (d2vdtdp * v - dvdt * dvdp) / (v * v);
 }
 
-// - molar mass depends on the presence of K, K2, and maybe even K4 (monomer, dimer, tetramer)
-/*
+// - molar mass depends on the presence of K, K2, and maybe even K4 (monomer,
+// dimer, tetramer). For now, the number used here is the molar weight
+// one gets from a periodic table; it is the molar mass associated with only
+// monomers, with a natural isotopic distribution.
+
 Real
 PotassiumVaporFluidProperties::molarMass() const
 {
-  return xxx;
+  return 39.0983e-3;
 }
-*/
 
 Real
 PotassiumVaporFluidProperties::criticalTemperature() const

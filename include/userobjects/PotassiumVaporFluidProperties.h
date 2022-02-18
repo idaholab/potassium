@@ -64,7 +64,7 @@ public:
   virtual Real beta_from_p_T(Real p, Real T) const override;
   virtual void
   beta_from_p_T(Real p, Real T, Real & beta, Real & dbeta_dp, Real & dbeta_dT) const override;
-  // virtual Real molarMass() const override;
+  virtual Real molarMass() const override;
   virtual Real criticalTemperature() const override;
   virtual Real criticalDensity() const override;
 
