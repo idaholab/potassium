@@ -38,7 +38,7 @@ FLUID_PROPERTIES  := yes
 include           $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
 
-include $(POTASSIUM_DIR)/libPotassium.mk
+include $(POTASSIUM_DIR)/libPotassiumProperties.mk
 
 # dep apps
 APPLICATION_DIR    := $(POTASSIUM_DIR)
