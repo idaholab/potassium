@@ -1,14 +1,14 @@
 #
-# build libPotassium using libMesh's build system
+# build libPotassiumProperties using libMesh's build system
 #
-LIBPOTASSIUM_DIR       := $(POTASSIUM_DIR)/contrib/libPotassium
+LIBPOTASSIUM_DIR       := $(POTASSIUM_DIR)/contrib/libPotassiumProperties
 
 LIBPOTASSIUM_srcfiles  :=
 LIBPOTASSIUM_srcfiles  += $(LIBPOTASSIUM_DIR)/K_Golden.cpp
 
 LIBPOTASSIUM_objects   := $(patsubst %.cpp, %.$(obj-suffix), $(LIBPOTASSIUM_srcfiles))
 LIBPOTASSIUM_deps      := $(patsubst %.$(obj-suffix), %.$(obj-suffix).d, $(LIBPOTASSIUM_objects))
-LIBPOTASSIUM_LIB       := $(LIBPOTASSIUM_DIR)/libPotassium-$(METHOD).la
+LIBPOTASSIUM_LIB       := $(LIBPOTASSIUM_DIR)/libPotassiumProperties-$(METHOD).la
 
 app_INCLUDES += -I$(POTASSIUM_DIR)
 app_LIBS += $(LIBPOTASSIUM_LIB)
@@ -24,10 +24,10 @@ $(app_EXEC): $(LIBPOTASSIUM_LIB)
 -include $(LIBPOTASSIUM_deps)
 
 cleanlibpotassium:
-	@echo "Cleaning libPotassium"
+	@echo "Cleaning libPotassiumProperties"
 	@rm -f $(LIBPOTASSIUM_objects)
 	@rm -f $(LIBPOTASSIUM_deps)
 	@rm -f $(LIBPOTASSIUM_LIB)
-	@rm -f $(LIBPOTASSIUM_DIR)/libPotassium-$(METHOD)*.dylib
-	@rm -f $(LIBPOTASSIUM_DIR)/libPotassium-$(METHOD)*.so*
-	@rm -f $(LIBPOTASSIUM_DIR)/libPotassium-$(METHOD)*.a
+	@rm -f $(LIBPOTASSIUM_DIR)/libPotassiumProperties-$(METHOD)*.dylib
+	@rm -f $(LIBPOTASSIUM_DIR)/libPotassiumProperties-$(METHOD)*.so*
+	@rm -f $(LIBPOTASSIUM_DIR)/libPotassiumProperties-$(METHOD)*.a
