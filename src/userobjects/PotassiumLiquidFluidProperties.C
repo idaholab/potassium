@@ -1,5 +1,5 @@
 #include "PotassiumLiquidFluidProperties.h"
-#include "contrib/libPotassium/K_Golden.h"
+#include "contrib/libPotassiumProperties/K_Golden.h"
 
 registerMooseObject("PotassiumApp", PotassiumLiquidFluidProperties);
 
