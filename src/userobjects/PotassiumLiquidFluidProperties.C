@@ -239,6 +239,40 @@ PotassiumLiquidFluidProperties::cv_from_v_e(Real v, Real e) const
   }
 }
 
+void
+PotassiumLiquidFluidProperties::cv_from_v_e(
+    Real v, Real e, Real & cv, Real & dcv_dv, Real & dcv_de) const
+{
+  v *= _to_ft3_lb;
+  e *= _to_Btu_lb;
+
+  double p, T;
+  int ierr = FLASH_vu_L_K(v, e, T, p);
+  if (ierr != 0)
+  {
+    cv = getNaN();
+    dcv_dv = getNaN();
+    dcv_de = getNaN();
+  }
+  else
+  {
+    double dcvdt, dcvdp;
+    DIFF_cv_tp_L_K(T, p, cv, dcvdt, dcvdp);
+
+    double v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp;
+    double u_, dudt, d2udt2, dudp, d2udp2, d2udtdp;
+    DIFF_vu_tp_L_K(
+        T, p, v_, dvdt, d2vdt2, dvdp, d2vdp2, d2vdtdp, u_, dudt, d2udt2, dudp, d2udp2, d2udtdp);
+
+    dcv_dv = (dcvdt * dudp - dcvdp * dudt) / (dvdt * dudp - dvdp * dudt);
+    dcv_de = (dcvdt * dvdp - dcvdp * dvdt) / (dudt * dvdp - dudp * dvdt);
+
+    cv *= _to_J_kgK;
+    dcv_dv *= _to_J_kgK / _to_m3_kg;
+    dcv_de *= _to_J_kgK / _to_J_kg;
+  }
+}
+
 Real
 PotassiumLiquidFluidProperties::mu_from_v_e(Real v, Real e) const
 {
