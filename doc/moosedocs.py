@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+#* This file is part of potassium
+#* https://github.com/idaholab/potassium
+#*
+#* All rights reserved, see NOTICE.txt for full restrictions
+#* https://github.com/idaholab/potassium/blob/master/NOTICE.txt
+#*
+#* Licensed under LGPL 2.1, please see LICENSE for details
+#* https://www.gnu.org/licenses/lgpl-2.1.html
+
 import sys
 import os
 
