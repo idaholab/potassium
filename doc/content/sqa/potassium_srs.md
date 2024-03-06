@@ -1,4 +1,4 @@
-!template load file=sqa/app_srs.md.template app=PotassiumApp category=potassium
+!template load file=sqa/app_srs.md.template app=Potassium category=potassium
 
 !template! item key=system-purpose
 {{app}} is a module to compute the fluid properties of potassium, whether liquid, vapor, or a two-phase mixture for MOOSE applications.
