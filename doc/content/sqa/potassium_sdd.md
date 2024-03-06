@@ -1,4 +1,4 @@
-!template load file=sqa/app_sdd.md.template app=PotassiumApp category=potassium
+!template load file=sqa/app_sdd.md.template app=Potassium category=potassium
 
 Potassium properties are computed within a fluid property user object. Fluid properties user objects derive
 from base classes defined in the MOOSE fluid properties module. These base classes define interfaces that other
