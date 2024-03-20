@@ -73,6 +73,7 @@ include/base/PotassiumRevision.h
 include/PotassiumRevision.h
 build
 .tags
+potassium.yaml
 
 # Allow output files in gold directories
 !**/gold/*.e
