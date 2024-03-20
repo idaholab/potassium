@@ -13,7 +13,7 @@
 #include "AppFactory.h"
 
 // Modules
-#include "FluidPropertiesApp.h"
+#include "ModulesApp.h"
 
 InputParameters
 PotassiumApp::validParams()
@@ -25,8 +25,7 @@ PotassiumApp::validParams()
 
 registerKnownLabel("PotassiumApp");
 
-PotassiumApp::PotassiumApp(InputParameters parameters)
-  : MooseApp(parameters)
+PotassiumApp::PotassiumApp(InputParameters parameters) : MooseApp(parameters)
 {
   PotassiumApp::registerAll(_factory, _action_factory, _syntax);
 }
@@ -44,6 +43,7 @@ PotassiumApp::registerApps()
   registerApp(PotassiumApp);
 }
 
+// External entry point for dynamic application loading
 extern "C" void
 PotassiumApp__registerAll(Factory & f, ActionFactory & af, Syntax & s)
 {
@@ -56,12 +56,5 @@ PotassiumApp::registerAll(Factory & f, ActionFactory & af, Syntax & s)
   Registry::registerObjectsTo(f, {"PotassiumApp"});
   Registry::registerActionsTo(af, {"PotassiumApp"});
 
-  FluidPropertiesApp::registerAll(f, af, s);
-}
-
-void
-PotassiumApp::registerObjects(Factory & factory)
-{
-  mooseDeprecated("PotassiumApp: use registerAll instead of registerObjects");
-  Registry::registerObjectsTo(factory, {"PotassiumApp"});
+  ModulesApp::registerAllObjects<PotassiumApp>(f, af, s);
 }
