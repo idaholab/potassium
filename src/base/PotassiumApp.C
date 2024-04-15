@@ -13,7 +13,9 @@
 #include "AppFactory.h"
 
 // Modules
+#ifndef SKIP_MODULE_LOAD
 #include "ModulesApp.h"
+#endif
 
 InputParameters
 PotassiumApp::validParams()
@@ -56,5 +58,8 @@ PotassiumApp::registerAll(Factory & f, ActionFactory & af, Syntax & s)
   Registry::registerObjectsTo(f, {"PotassiumApp"});
   Registry::registerActionsTo(af, {"PotassiumApp"});
 
+  libmesh_ignore(s);
+#ifndef SKIP_MODULE_LOAD
   ModulesApp::registerAllObjects<PotassiumApp>(f, af, s);
+#endif
 }
