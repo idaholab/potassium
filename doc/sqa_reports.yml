@@ -1,0 +1,26 @@
+Applications:
+    potassium:
+        app_types:
+            - PotassiumApp
+        content_directory: ${ROOT_DIR}/doc/content
+        remove:
+            - ${MOOSE_DIR}/framework/doc/remove.yml
+        log_default: WARNING
+        show_warning: false
+
+Documents:
+    software_requirements_specification: sqa/potassium_srs.md
+    software_design_description: sqa/potassium_sdd.md
+    software_test_plan: sqa/potassium_stp.md
+    requirements_traceablity_matrix: sqa/potassium_rtm.md
+    verification_validation_report: sqa/potassium_vvr.md
+    failure_analysis_report: sqa/potassium_far.md
+    log_default: WARNING
+    show_warning: false
+
+Requirements:
+    potassium:
+        directories:
+            - ${ROOT_DIR}/test
+        log_default: WARNING
+        show_warning: false

@@ -1,0 +1,6 @@
+dependencies:
+    - framework
+    - fluid_properties
+repos:
+    default: https://github.inl.gov/idaholab/potassium
+reports: !include ${POTASSIUM_DIR}/doc/sqa_reports.yml
