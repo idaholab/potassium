@@ -62,7 +62,7 @@ This can have multiple lines and even paragraphs.
 When you think you are finished with your branch, send a pull request for review.
 
 1. `git push upstream <branch name>`
-1. Go to [branches](https://hpcgitlab.inl.gov/idaholab/potassium/branches).
+1. Go to [branches](https://github.inl.gov/ncrc/potassium/branches).
 1. Find your branch and click `+ Merge request`.
 1. It will show you an overview of your merge request. If you are happy with it, click on `Submit Merge Request`.
 
@@ -107,7 +107,7 @@ Note: You will most likely run into conflicts that you will have to resolve, thu
 
 ## Reviewing a merge request
 
-* Go to [Merge request list](https://hpcgitlab.inl.gov/idaholab/potassium/merge_requests)
+* Go to [Merge request list](https://github.inl.gov/ncrc/potassium/pulls)
 * Find an open merge request that is not assigned to any one
 * Assign the merge request to yourself so others know you are working on it
 * You can see the commits and on the `Changes` tab you can see the complete diff.
