@@ -27,7 +27,7 @@ PotassiumApp::validParams()
 
 registerKnownLabel("PotassiumApp");
 
-PotassiumApp::PotassiumApp(InputParameters parameters) : MooseApp(parameters)
+PotassiumApp::PotassiumApp(const InputParameters & parameters) : MooseApp(parameters)
 {
   PotassiumApp::registerAll(_factory, _action_factory, _syntax);
 }
