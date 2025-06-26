@@ -16,7 +16,7 @@ class Factory;
 class PotassiumApp : public MooseApp
 {
 public:
-  PotassiumApp(InputParameters parameters);
+  PotassiumApp(const InputParameters & parameters);
 
 public:
   static InputParameters validParams();
